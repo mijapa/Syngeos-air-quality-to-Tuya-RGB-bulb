@@ -1,0 +1,367 @@
+[
+    {
+        "id": "03f2afeb9c6195e8",
+        "type": "tab",
+        "label": "Air quality to RGB bulb",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b0dfc0033202611e",
+        "type": "http request",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.syngeos.pl/api/public/data/device/1126",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "30dbac3192ddae4e"
+            ]
+        ]
+    },
+    {
+        "id": "01f01ddc3b5faed9",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "900",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "30",
+        "topic": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 300,
+        "wires": [
+            [
+                "b0dfc0033202611e"
+            ]
+        ]
+    },
+    {
+        "id": "34dbd056f5325d8f",
+        "type": "debug",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "b32fe108ce8b9f31",
+        "type": "function",
+        "z": "03f2afeb9c6195e8",
+        "name": "PM10 level to hsv color",
+        "func": "pm10currentNorm = msg.payload.sensors[4].data[0].current_norm;\n\n// https://pypi.org/project/tinytuya/\n// Version 3.3 - Light Type (RGB)\n// DP ID \tFunction Point \tType \tRange \tUnits\n// 24 \tColor \thexstring \th:0-360,s:0-1000,v:0-1000 \thsv \n// color is dps 24 in format \"0[hhh]0[sss]0[vvv]\" where vvv is like brightness and is in range 0-1000\n\n\nswitch (pm10currentNorm){\n    case \"grade-a\": color = \"007803E803E8\"; break;\n    case \"grade-b\": color = \"004E03E803E8\"; break;\n    case \"grade-c\": color = \"003703E803E8\"; break;\n    case \"grade-d\": color = \"002D03E803E8\"; break;\n    case \"grade-e\": color = \"001C03E803E8\"; break;\n    case \"grade-f\": color = \"000003E803E8\"; break;\n\n}\n\n\nvar newMsg = { payload: {multiple: true , data: {20 :true, 21: \"colour\", 24: color}}};\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 300,
+        "wires": [
+            [
+                "34dbd056f5325d8f",
+                "2e7337a7d28de1b9"
+            ]
+        ]
+    },
+    {
+        "id": "30dbac3192ddae4e",
+        "type": "json",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 520,
+        "y": 300,
+        "wires": [
+            [
+                "b32fe108ce8b9f31",
+                "f4b99a9e6187d669"
+            ]
+        ]
+    },
+    {
+        "id": "f4b99a9e6187d669",
+        "type": "debug",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "2e7337a7d28de1b9",
+        "type": "tuya-smart-device",
+        "z": "03f2afeb9c6195e8",
+        "deviceName": "Bulb",
+        "disableAutoStart": false,
+        "deviceId": "",
+        "deviceKey": "",
+        "storeAsCreds": true,
+        "deviceIp": "",
+        "retryTimeout": 1000,
+        "findTimeout": 10000,
+        "tuyaVersion": "3.1",
+        "eventMode": "event-both",
+        "x": 930,
+        "y": 300,
+        "wires": [
+            [
+                "eae9dfa5116c7649"
+            ],
+            [
+                "8be32d97746148c5"
+            ]
+        ]
+    },
+    {
+        "id": "eae9dfa5116c7649",
+        "type": "debug",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8be32d97746148c5",
+        "type": "debug",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "7864680bbdcf033e",
+        "type": "catch",
+        "z": "03f2afeb9c6195e8",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 610,
+        "y": 120,
+        "wires": [
+            [
+                "e2437d79719fae4a"
+            ]
+        ]
+    },
+    {
+        "id": "e2437d79719fae4a",
+        "type": "debug",
+        "z": "03f2afeb9c6195e8",
+        "name": "On Error",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6d511a7c561abcd3",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-a",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-a",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 450,
+        "y": 380,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    },
+    {
+        "id": "b4efe63398aa1ac7",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-b",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-b",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 450,
+        "y": 420,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    },
+    {
+        "id": "7be1c2a7b9811153",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-c",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-c",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 450,
+        "y": 460,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    },
+    {
+        "id": "4755b793355f19b7",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-d",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-d",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 450,
+        "y": 500,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    },
+    {
+        "id": "2945bd2545eaafc6",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-e",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-e",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 450,
+        "y": 540,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    },
+    {
+        "id": "a70710824d119f65",
+        "type": "inject",
+        "z": "03f2afeb9c6195e8",
+        "name": "grade-f",
+        "props": [
+            {
+                "p": "payload.sensors[4].data[0].current_norm",
+                "v": "grade-f",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 450,
+        "y": 580,
+        "wires": [
+            [
+                "b32fe108ce8b9f31"
+            ]
+        ]
+    }
+]
