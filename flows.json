@@ -41,13 +41,13 @@
                 "vt": "str"
             }
         ],
-        "repeat": "900",
+        "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": "30",
         "topic": "",
         "payloadType": "date",
-        "x": 190,
+        "x": 180,
         "y": 300,
         "wires": [
             [
@@ -76,7 +76,7 @@
         "type": "function",
         "z": "03f2afeb9c6195e8",
         "name": "PM10 level to hsv color",
-        "func": "pm10currentNorm = msg.payload.sensors[4].data[0].current_norm;\n\n// https://pypi.org/project/tinytuya/\n// Version 3.3 - Light Type (RGB)\n// DP ID \tFunction Point \tType \tRange \tUnits\n// 24 \tColor \thexstring \th:0-360,s:0-1000,v:0-1000 \thsv \n// color is dps 24 in format \"0[hhh]0[sss]0[vvv]\" where vvv is like brightness and is in range 0-1000\n\n\nswitch (pm10currentNorm){\n    case \"grade-a\": color = \"007803E803E8\"; break;\n    case \"grade-b\": color = \"004E03E803E8\"; break;\n    case \"grade-c\": color = \"003703E803E8\"; break;\n    case \"grade-d\": color = \"002D03E803E8\"; break;\n    case \"grade-e\": color = \"001C03E803E8\"; break;\n    case \"grade-f\": color = \"000003E803E8\"; break;\n\n}\n\n\nvar newMsg = { payload: {multiple: true , data: {20 :true, 21: \"colour\", 24: color}}};\nreturn newMsg;",
+        "func": "pm10currentNorm = msg.payload.sensors[4].data[0].current_norm;\n\n// https://pypi.org/project/tinytuya/\n// Version 3.3 - Light Type (RGB)\n// DP ID \tFunction Point \tType \tRange \tUnits\n// 24 \tColor \thexstring \th:0-360,s:0-1000,v:0-1000 \thsv \n// color is dps 24 in format \"0[hhh]0[sss]0[vvv]\" where vvv is like brightness and is in range 0-1000\n\n\nswitch (pm10currentNorm){\n    case \"grade-a\": color = \"007803E803E8\"; break;\n    case \"grade-b\": color = \"004E03E803E8\"; break;\n    case \"grade-c\": color = \"002A03E803E8\"; break;\n    case \"grade-d\": color = \"001C03E803E8\"; break;\n    case \"grade-e\": color = \"000E03E803E8\"; break;\n    case \"grade-f\": color = \"000003E803E8\"; break;\n\n}\n\n\nvar newMsg = { payload: {multiple: true , data: {20 :true, 21: \"colour\", 24: color}}};\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -113,7 +113,7 @@
         "type": "debug",
         "z": "03f2afeb9c6195e8",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
